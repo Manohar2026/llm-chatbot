@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Chatbot</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: #f3f4f6;
+            color: #1f2937;
+            font-family: Arial, sans-serif;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 760px;
+            height: min(720px, 90vh);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .chat-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .chat-header h1 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .chat-header p {
+            margin: 5px 0 0;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        #messages {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            overflow-y: auto;
+            padding: 22px;
+        }
+
+        .message {
+            max-width: 78%;
+            padding: 11px 14px;
+            border-radius: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            font-size: 14px;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: #2563eb;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .assistant-message {
+            align-self: flex-start;
+            background: #f0f1f3;
+            color: #1f2937;
+            border-bottom-left-radius: 4px;
+        }
+
+        .welcome {
+            margin: auto;
+            color: #9ca3af;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .chat-form {
+            display: flex;
+            gap: 10px;
+            padding: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        #messageInput {
+            flex: 1;
+            min-width: 0;
+            padding: 13px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        #messageInput:focus {
+            border-color: #2563eb;
+        }
+
+        #sendButton {
+            padding: 0 21px;
+            border: 0;
+            border-radius: 9px;
+            background: #2563eb;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #sendButton:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 520px) {
+            body { padding: 0; }
+            .chat-container { height: 100vh; border: 0; border-radius: 0; }
+            .message { max-width: 88%; }
+        }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <header class="chat-header">
+        <h1>LLM Chatbot</h1>
+        <p>Powered by OpenRouter</p>
+    </header>
+
+    <main id="messages">
+        <div class="welcome" id="welcomeMessage">Send a message to start chatting.</div>
+    </main>
+
+    <form class="chat-form" id="chatForm">
+        <input id="messageInput" type="text" placeholder="Type your message..." autocomplete="off" required>
+        <button id="sendButton" type="submit">Send</button>
+    </form>
+</div>
+
+<script>
+    const chatForm = document.getElementById("chatForm");
+    const messageInput = document.getElementById("messageInput");
+    const sendButton = document.getElementById("sendButton");
+    const messagesContainer = document.getElementById("messages");
+    const welcomeMessage = document.getElementById("welcomeMessage");
+
+    function addMessage(text, role) {
+        welcomeMessage?.remove();
+
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("message");
+        messageElement.classList.add(role === "user" ? "user-message" : "assistant-message");
+        messageElement.textContent = text;
+
+        messagesContainer.appendChild(messageElement);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        return messageElement;
+    }
+
+    chatForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        addMessage(message, "user");
+        messageInput.value = "";
+        sendButton.disabled = true;
+        messageInput.disabled = true;
+
+        const loadingMessage = addMessage("Thinking...", "assistant");
+
+        try {
+            const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Something went wrong.");
+            }
+
+            loadingMessage.textContent = data.reply;
+        } catch (error) {
+            loadingMessage.textContent = "Error: " + error.message;
+        } finally {
+            sendButton.disabled = false;
+            messageInput.disabled = false;
+            messageInput.focus();
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    });
+
+    messageInput.focus();
+</script>
+</body>
+</html>
