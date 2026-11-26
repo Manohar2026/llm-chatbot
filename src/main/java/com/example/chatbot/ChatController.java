@@ -16,19 +16,36 @@ public class ChatController {
 
     @PostMapping
     public ResponseEntity<?> chat(@RequestBody ChatRequest request) {
-        if (request.message() == null || request.message().isBlank()) {
+        if (request.getMessage() == null || request.getMessage().isBlank()) {
             return ResponseEntity.badRequest().body(
                     new ErrorResponse("Message cannot be empty."));
         }
 
         try {
-            return ResponseEntity.ok(chatService.sendMessage(request.message().trim()));
+            return ResponseEntity.ok(chatService.sendMessage(request.getMessage().trim()));
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(
                     new ErrorResponse(exception.getMessage()));
         }
     }
 
-    public record ErrorResponse(String error) {
+    public static class ErrorResponse {
+
+        private String error;
+
+        public ErrorResponse() {
+        }
+
+        public ErrorResponse(String error) {
+            this.error = error;
+        }
+
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
+        }
     }
 }

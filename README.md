@@ -1,6 +1,6 @@
 # LLM Chatbot
 
-A very basic chatbot built with Java 17, Spring Boot, and the OpenRouter API.
+A very basic chatbot built with Java 17, Spring Boot, and the OpenRouter API. Request, response, and conversation-message DTOs use regular Java classes (POJOs), not Java records.
 
 ## Features
 
