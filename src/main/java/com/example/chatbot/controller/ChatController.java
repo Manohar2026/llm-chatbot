@@ -1,5 +1,7 @@
-package com.example.chatbot;
+package com.example.chatbot.controller;
 
+import com.example.chatbot.ChatRequest;
+import com.example.chatbot.service.ChatService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

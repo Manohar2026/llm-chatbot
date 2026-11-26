@@ -1,5 +1,7 @@
-package com.example.chatbot;
+package com.example.chatbot.service;
 
+import com.example.chatbot.ChatMessage;
+import com.example.chatbot.ChatResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
