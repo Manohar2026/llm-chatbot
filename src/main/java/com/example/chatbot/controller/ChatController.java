@@ -1,7 +1,9 @@
 package com.example.chatbot.controller;
 
 import com.example.chatbot.ChatRequest;
+import com.example.chatbot.ChatResponse;
 import com.example.chatbot.service.ChatService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +19,31 @@ public class ChatController {
     }
 
     @PostMapping
-    public ResponseEntity<?> chat(@RequestBody ChatRequest request) {
+    public ResponseEntity<?> chat(
+            @RequestBody ChatRequest request,
+            HttpSession session) {
+
         if (request.getMessage() == null || request.getMessage().isBlank()) {
             return ResponseEntity.badRequest().body(
                     new ErrorResponse("Message cannot be empty."));
         }
 
         try {
-            return ResponseEntity.ok(chatService.sendMessage(request.getMessage().trim()));
+            String reply = chatService.sendMessage(
+                    request.getMessage().trim(),
+                    session.getId());
+
+            return ResponseEntity.ok(new ChatResponse(reply));
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(
                     new ErrorResponse(exception.getMessage()));
         }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> clearConversation(HttpSession session) {
+        chatService.clearConversation(session.getId());
+        return ResponseEntity.noContent().build();
     }
 
     public static class ErrorResponse {

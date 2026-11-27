@@ -1,56 +1,77 @@
 # LLM Chatbot
 
-A very basic chatbot built with Java 17, Spring Boot, and the OpenRouter API. Request, response, and conversation-message DTOs use regular Java classes (POJOs), not Java records.
+A small full-stack chatbot built with Java 17, Spring Boot, Spring AI, and OpenRouter. The frontend is plain HTML, CSS, and JavaScript—no Node.js or frontend build tools are required.
 
-## Features
+## Project structure
 
-- Simple chat interface with user messages on the right and AI messages on the left.
-- Sends the complete conversation history to the LLM on every request.
-- Stores conversation messages in a Java `List<ChatMessage>`.
-- Uses OpenAI's `openai/gpt-4o-mini` model through OpenRouter by default.
-- No database or additional infrastructure.
+```text
+llm-chatbot/
+├── frontend/
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
+├── src/
+│   └── main/
+│       ├── java/com/example/chatbot/
+│       │   ├── ChatbotApplication.java
+│       │   ├── ChatRequest.java
+│       │   ├── ChatResponse.java
+│       │   ├── controller/ChatController.java
+│       │   └── service/ChatService.java
+│       └── resources/application.properties
+└── pom.xml
+```
 
 ## Requirements
 
-- Java 17+
+- Java 17 or later
 - Maven
 - An OpenRouter API key
 
 ## Run locally
 
-1. Clone this repository.
-2. Set your OpenRouter key as an environment variable. Do not put the key in source code.
+1. Open a terminal in the project root (the folder containing `pom.xml`).
+2. Set your OpenRouter API key.
 
 Windows PowerShell:
 
 ```powershell
-$env:OPENROUTER_API_KEY="your-new-openrouter-key"
+$env:OPENROUTER_API_KEY="your-openrouter-api-key"
 ```
 
 macOS/Linux:
 
 ```bash
-export OPENROUTER_API_KEY="your-new-openrouter-key"
+export OPENROUTER_API_KEY="your-openrouter-api-key"
 ```
 
-3. From the project root, run:
+3. Start the Spring Boot application:
 
 ```bash
 mvn spring-boot:run
 ```
 
-4. Open http://localhost:8080.
+4. Open [http://localhost:8081](http://localhost:8081).
 
-## Configuration
+The Spring Boot application serves the files in the root `frontend/` folder. Keep that folder next to `pom.xml` when running the application.
 
-The default model is `openai/gpt-4o-mini`. To use another model available on OpenRouter, set:
+## Choose a model
 
-```bash
-OPENROUTER_MODEL="openai/gpt-4o-mini"
+The default model is `openai/gpt-4o-mini`. To use another model available on OpenRouter, set the `OPENROUTER_MODEL` environment variable before starting the application.
+
+PowerShell:
+
+```powershell
+$env:OPENROUTER_MODEL="openai/gpt-4o-mini"
 ```
 
-## How memory works
+## How it works
 
-The Spring service stores messages in an in-memory Java list. Each new user message is added to that list, and the entire list is sent to OpenRouter. The assistant response is then added to the same list.
+- `ChatController` exposes `POST /api/chat` and `DELETE /api/chat`.
+- `ChatService` uses Spring AI's `ChatClient` to call the configured model.
+- Spring AI's `MessageChatMemoryAdvisor` and in-memory `ChatMemory` keep a bounded message window for each HTTP session.
+- The browser session ID is used as the conversation ID, so separate browser sessions do not share the same conversation.
+- `DELETE /api/chat` clears the current browser session's conversation.
+- Conversation memory is held in memory and is cleared when the application restarts.
 
-This is intentionally a single shared conversation for a basic learning project. The conversation is cleared when the application restarts. It is not designed for multiple users or concurrent separate chats.
+The OpenAI model integration is configured to use OpenRouter's OpenAI-compatible API. The API key is read from the `OPENROUTER_API_KEY` environment variable; do not commit API keys to Git.
