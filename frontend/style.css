@@ -51,7 +51,7 @@ button {
 
 .topbar {
     display: flex;
-    min-height: 76px;
+    min-height: 68px;
     flex: 0 0 auto;
     align-items: center;
     justify-content: space-between;
@@ -119,12 +119,12 @@ button {
 
 .main-content {
     display: flex;
-    width: min(100% - 32px, 820px);
+    width: min(100% - 32px, 900px);
     min-height: 0;
     flex: 1 1 0;
     align-self: center;
     align-items: stretch;
-    padding: 30px 0;
+    padding: 12px 0 10px;
 }
 
 .chat-panel {
@@ -137,7 +137,7 @@ button {
 
 .intro {
     flex: 0 0 auto;
-    padding: 12px 4px 24px;
+    padding: 4px 4px 12px;
     text-align: center;
 }
 
@@ -149,9 +149,9 @@ button {
 }
 
 .intro h1 {
-    margin: 13px 0 8px;
+    margin: 7px 0 5px;
     color: #f3f6fc;
-    font-size: clamp(27px, 5vw, 38px);
+    font-size: clamp(25px, 4vw, 33px);
     font-weight: 650;
     letter-spacing: -0.045em;
 }
@@ -159,7 +159,7 @@ button {
 .intro p {
     margin: 0;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .messages {
@@ -167,11 +167,11 @@ button {
     min-height: 0;
     flex: 1 1 0;
     flex-direction: column;
-    gap: 22px;
+    gap: 16px;
     overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior-y: contain;
-    padding: 20px 4px 28px;
+    padding: 14px 4px 18px;
     scroll-behavior: smooth;
     scrollbar-color: #52627a transparent;
     scrollbar-width: thin;
@@ -251,7 +251,7 @@ button {
 
 .composer {
     flex: 0 0 auto;
-    padding: 12px;
+    padding: 10px;
     border: 1px solid #34445e;
     border-radius: 16px;
     background: rgba(23, 34, 53, 0.94);
@@ -325,9 +325,9 @@ button {
 }
 
 .status-message {
-    min-height: 20px;
+    min-height: 14px;
     flex: 0 0 auto;
-    margin: 8px 4px 0;
+    margin: 4px 4px 0;
     color: #f2a7a7;
     font-size: 11px;
 }
@@ -337,7 +337,7 @@ button {
     flex: 0 0 auto;
     justify-content: center;
     gap: 8px;
-    padding: 18px 12px 22px;
+    padding: 8px 12px 10px;
     color: #71829a;
     font-size: 10px;
 }
@@ -358,7 +358,7 @@ button {
 
 @media (max-width: 600px) {
     .topbar {
-        min-height: 68px;
+        min-height: 62px;
         padding: 0 16px;
     }
 
@@ -368,11 +368,11 @@ button {
 
     .main-content {
         width: min(100% - 24px, 820px);
-        padding: 20px 0;
+        padding: 8px 0;
     }
 
     .intro {
-        padding-bottom: 18px;
+        padding-bottom: 10px;
     }
 
     .intro p {
@@ -394,7 +394,7 @@ button {
     }
 
     .footer {
-        padding: 12px;
+        padding: 6px 12px 8px;
     }
 }
 
