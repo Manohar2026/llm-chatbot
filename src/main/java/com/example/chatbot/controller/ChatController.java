@@ -20,8 +20,7 @@ public class ChatController {
 
     @PostMapping
     public ResponseEntity<?> chat(
-            @RequestBody ChatRequest request,
-            HttpSession session) {
+            @RequestBody ChatRequest request) {
 
         if (request.getMessage() == null || request.getMessage().isBlank()) {
             return ResponseEntity.badRequest().body(
@@ -30,20 +29,13 @@ public class ChatController {
 
         try {
             String reply = chatService.sendMessage(
-                    request.getMessage().trim(),
-                    session.getId());
+                    request.getMessage().trim());
 
             return ResponseEntity.ok(new ChatResponse(reply));
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(
                     new ErrorResponse(exception.getMessage()));
         }
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> clearConversation(HttpSession session) {
-        chatService.clearConversation(session.getId());
-        return ResponseEntity.noContent().build();
     }
 
     public static class ErrorResponse {
