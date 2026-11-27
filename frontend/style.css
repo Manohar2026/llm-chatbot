@@ -19,9 +19,13 @@
 }
 
 body {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
     min-width: 320px;
-    min-height: 100vh;
+    min-height: 0;
     margin: 0;
+    overflow: hidden;
     background:
         radial-gradient(ellipse at 50% -20%, rgba(113, 134, 255, 0.18), transparent 50%),
         #101827;
@@ -38,13 +42,17 @@ button {
 
 .app-shell {
     display: flex;
-    min-height: 100vh;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .topbar {
     display: flex;
     min-height: 76px;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: space-between;
     padding: 0 5.5%;
@@ -109,38 +117,27 @@ button {
     box-shadow: 0 0 12px rgba(105, 214, 163, 0.65);
 }
 
-.new-chat-button {
-    padding: 9px 13px;
-    border: 1px solid var(--line);
-    border-radius: 9px;
-    background: transparent;
-    color: #dce5f2;
-    font-size: 12px;
-    transition: background 160ms ease, border-color 160ms ease;
-}
-
-.new-chat-button:hover {
-    border-color: #536681;
-    background: rgba(255, 255, 255, 0.04);
-}
-
 .main-content {
-    display: grid;
+    display: flex;
     width: min(100% - 32px, 820px);
-    flex: 1;
+    min-height: 0;
+    flex: 1 1 0;
     align-self: center;
-    align-items: center;
-    padding: 44px 0 30px;
+    align-items: stretch;
+    padding: 30px 0;
 }
 
 .chat-panel {
     display: flex;
-    min-height: min(690px, calc(100vh - 190px));
+    width: 100%;
+    min-height: 0;
+    flex: 1 1 auto;
     flex-direction: column;
 }
 
 .intro {
-    padding: 12px 4px 28px;
+    flex: 0 0 auto;
+    padding: 12px 4px 24px;
     text-align: center;
 }
 
@@ -167,18 +164,23 @@ button {
 
 .messages {
     display: flex;
-    min-height: 220px;
-    flex: 1;
+    min-height: 0;
+    flex: 1 1 0;
     flex-direction: column;
     gap: 22px;
+    overflow-x: hidden;
     overflow-y: auto;
+    overscroll-behavior-y: contain;
     padding: 20px 4px 28px;
     scroll-behavior: smooth;
+    scrollbar-color: #52627a transparent;
+    scrollbar-width: thin;
 }
 
 .message-row {
     display: flex;
     max-width: 88%;
+    flex: 0 0 auto;
     align-items: flex-start;
     gap: 11px;
 }
@@ -248,6 +250,7 @@ button {
 }
 
 .composer {
+    flex: 0 0 auto;
     padding: 12px;
     border: 1px solid #34445e;
     border-radius: 16px;
@@ -306,8 +309,7 @@ button {
     filter: brightness(1.12);
 }
 
-.send-button:disabled,
-.new-chat-button:disabled {
+.send-button:disabled {
     cursor: not-allowed;
     opacity: 0.55;
 }
@@ -324,6 +326,7 @@ button {
 
 .status-message {
     min-height: 20px;
+    flex: 0 0 auto;
     margin: 8px 4px 0;
     color: #f2a7a7;
     font-size: 11px;
@@ -331,6 +334,7 @@ button {
 
 .footer {
     display: flex;
+    flex: 0 0 auto;
     justify-content: center;
     gap: 8px;
     padding: 18px 12px 22px;
@@ -364,11 +368,7 @@ button {
 
     .main-content {
         width: min(100% - 24px, 820px);
-        padding-top: 24px;
-    }
-
-    .chat-panel {
-        min-height: calc(100vh - 145px);
+        padding: 20px 0;
     }
 
     .intro {
@@ -391,6 +391,10 @@ button {
     .input-hint {
         max-width: 190px;
         line-height: 1.4;
+    }
+
+    .footer {
+        padding: 12px;
     }
 }
 

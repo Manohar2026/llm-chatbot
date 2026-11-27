@@ -2,7 +2,6 @@ const chatForm = document.querySelector("#chat-form");
 const messageInput = document.querySelector("#message-input");
 const messages = document.querySelector("#messages");
 const sendButton = document.querySelector("#send-button");
-const newChatButton = document.querySelector("#new-chat-button");
 const statusMessage = document.querySelector("#status-message");
 
 function addMessage(role, text) {
@@ -41,7 +40,6 @@ function addTypingIndicator() {
 
 function setLoading(isLoading) {
     sendButton.disabled = isLoading;
-    newChatButton.disabled = isLoading;
     messageInput.disabled = isLoading;
     sendButton.querySelector("span").textContent = isLoading ? "Sending..." : "Send";
 }
@@ -85,26 +83,6 @@ chatForm.addEventListener("submit", async (event) => {
         statusMessage.textContent = "Check your connection and the backend terminal for details.";
     } finally {
         setLoading(false);
-        messageInput.focus();
-    }
-});
-
-newChatButton.addEventListener("click", async () => {
-    statusMessage.textContent = "";
-    newChatButton.disabled = true;
-
-    try {
-        const response = await fetch("/api/chat", { method: "DELETE" });
-        if (!response.ok) {
-            throw new Error("Could not clear this conversation.");
-        }
-
-        messages.replaceChildren();
-        addMessage("assistant", "New conversation started. What would you like to talk about?");
-    } catch (error) {
-        statusMessage.textContent = error.message || "Could not start a new conversation.";
-    } finally {
-        newChatButton.disabled = false;
         messageInput.focus();
     }
 });
