@@ -1,8 +1,6 @@
 package com.example.chatbot.service;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
@@ -16,7 +14,7 @@ import java.util.List;
 public class ChatService {
 
     private final ChatClient chatClient;
-    private List<Message> history = new ArrayList<>();
+    private final List<Message> history = new ArrayList<>();
     private final String apiKey;
 
     public ChatService(
